@@ -1,0 +1,17 @@
+{
+  "canvas": {
+    "width": 1000,
+    "height": 500
+  },
+  "grid": {
+    "cols": 30,
+    "rows": 15
+  },
+  "elements": {
+    "total": 400
+  },
+  "terrain": {
+    "granularity": 25,
+    "probability": 0.35
+  }
+}

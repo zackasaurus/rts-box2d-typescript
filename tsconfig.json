@@ -9,6 +9,14 @@
     "skipLibCheck": true,
     "strictFunctionTypes": false
   },
-  "include": ["src/*"],
+  "include": [
+    "src/*",
+    "src/model/Physics.ts",
+    "src/model/Trapezoid.ts",
+    "src/model/Game.ts",
+    "src/model/Box.ts",
+    "src/model/Ground.ts",
+    "src/model/box2d"
+  ],
   "exclude": ["node_modules"]
 }
