@@ -1,4 +1,5 @@
 import * as PIXI from 'pixi.js';
+import { Viewport } from 'pixi-viewport';
 import Physics from './Physics';
 import Target from './Target';
 import World from './World';
@@ -30,18 +31,29 @@ class Game {
   config: any;
   trapezoid: Trapezoid;
   elements: any[];
+  viewport: Viewport;
+  sprite: PIXI.Sprite;
 
   constructor(Box2D) {
     this.config = config;
     this.width = this.config.canvas.width;
     this.height = this.config.canvas.height;
     this.app = new PIXI.Application({
-      width: this.width,
-      height: this.height,
+      width: window.innerWidth,
+      height: window.innerHeight,
       antialias: true,
       // transparent: true,
       // resizeTo: window,
     });
+    this.viewport = new Viewport({
+      screenWidth: window.innerWidth,
+      screenHeight: window.innerHeight,
+      worldWidth: 1000,
+      worldHeight: 1000,
+
+      interaction: this.app.renderer.plugins.interaction, // the interaction module is important for wheel to work properly when renderer.view is placed or scaled
+    });
+
     // Mouse events
     this.mouse = new Mouse(this);
 
@@ -60,7 +72,7 @@ class Game {
     // Elements
     this.elements = [];
 
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < this.config.elements.total; i++) {
       this.elements.push(new Trapezoid(this));
     }
 
@@ -75,13 +87,30 @@ class Game {
     const FPS = 60;
     // Add boxes
 
+    // add the viewport to the stage
+    this.app.stage.addChild(this.viewport);
+
+    // activate plugins
+    this.viewport.drag().pinch().wheel().decelerate();
+
+    // add a red box
+    this.sprite = this.viewport.addChild(new PIXI.Sprite(PIXI.Texture.WHITE));
+    this.sprite.tint = 0xff0000;
+    this.sprite.width = this.sprite.height = 100;
+    this.sprite.position.set(100, 100);
+
     // Ticker
     const ticker = PIXI.Ticker.shared;
     ticker.add((time) => {
       // console.log(time);
 
       // Update physics world
+      // 6 velocity iterations, 2 position iterations is the recommended settings
+      // https://box2d.org/documentation/md__d_1__git_hub_box2d_docs_hello.html
       this.physics.world.Step(time / FPS, 6, 2);
+
+      // Update graphics world
+      this.world.update();
 
       // Update target
       this.target.update();

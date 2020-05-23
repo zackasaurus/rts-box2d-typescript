@@ -4,11 +4,12 @@
     "height": 500
   },
   "grid": {
-    "cols": 30,
-    "rows": 15
+    "cols": 20,
+    "rows": 10
   },
+  "tick": 5,
   "elements": {
-    "total": 400
+    "total": 1
   },
   "terrain": {
     "granularity": 25,

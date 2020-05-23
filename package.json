@@ -9,13 +9,12 @@
   "license": "MIT",
   "dependencies": {
     "box2d.ts": "^1.0.2",
-    "matter-js": "^0.14.2",
+    "pixi-viewport": "^4.11.1",
     "pixi.js": "^5.2.3",
     "typescript": "^3.8.3"
   },
   "devDependencies": {
     "@babel/core": "^7.7.2",
-    "@types/matter-js": "^0.14.2",
     "babel-loader": "^8.0.6",
     "copy-webpack-plugin": "^5.1.1",
     "css-loader": "^3.2.0",

@@ -27,7 +27,7 @@ class Trapezoid {
       h: 100,
     };
     this.max = {
-      force: 200,
+      force: 100,
       speed: 15,
     };
     // Define body
@@ -131,6 +131,7 @@ class Trapezoid {
     // console.log(curr);
     // this.graphics.position;
     // force, current position
+
     const force = this.seek();
     this.body.ApplyForce(
       new this.physics.Box2D.b2Vec2(force.x, force.y),
