@@ -29,6 +29,7 @@ class Game {
   physics: Physics;
   config: any;
   trapezoid: Trapezoid;
+  elements: any[];
 
   constructor(Box2D) {
     this.config = config;
@@ -56,7 +57,14 @@ class Game {
     this.box = new Box(this);
     this.boxes = [];
 
-    this.trapezoid = new Trapezoid(this);
+    // Elements
+    this.elements = [];
+
+    for (let i = 0; i < 5; i++) {
+      this.elements.push(new Trapezoid(this));
+    }
+
+    // this.trapezoid = new Trapezoid(this);
     console.log(this.app);
     console.log(this.app.view);
   }
@@ -79,12 +87,13 @@ class Game {
       this.target.update();
 
       // Update Trapezoid
-      this.trapezoid.update();
+      // this.trapezoid.update();
 
       // Update Boxes
       this.box.update();
-      this.boxes.forEach((box) => {
-        box.update();
+
+      this.elements.forEach((element) => {
+        element.update();
       });
 
       // this.ground.update();
