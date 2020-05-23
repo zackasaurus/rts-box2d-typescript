@@ -65,7 +65,7 @@ class Box {
     );
 
     // Stage
-    this.game.app.stage.addChild(this.graphics);
+    this.game.viewport.addChild(this.graphics);
   }
   update() {
     // this.graphics.position = this.body.GetPosition();

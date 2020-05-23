@@ -66,7 +66,7 @@ class Trapezoid {
     this.graphics.drawRect(0, 0, this.dimensions.w, this.dimensions.h);
 
     // Stage
-    this.game.app.stage.addChild(this.graphics);
+    this.game.viewport.addChild(this.graphics);
   }
   seek() {
     // const desired = new this.physics.Box2D.b2Vec2();

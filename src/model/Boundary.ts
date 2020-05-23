@@ -16,6 +16,8 @@ class Boundary {
     this.physics = this.world.game.physics;
     this.Box2D = this.world.game.physics.Box2D;
     this.rand = Math.random() * 1000;
+
+    // Absolute units
     this.dimensions = {
       x: 100,
       y: 400,
@@ -62,7 +64,7 @@ class Boundary {
     this.graphics.drawRect(0, 0, this.dimensions.w, this.dimensions.h);
 
     // Stage
-    this.world.game.app.stage.addChild(this.graphics);
+    this.world.game.viewport.addChild(this.graphics);
   }
 
   update() {

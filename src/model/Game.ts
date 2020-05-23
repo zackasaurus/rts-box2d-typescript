@@ -6,7 +6,6 @@ import World from './World';
 import Box from './Box';
 import Trapezoid from './Trapezoid';
 import Ground from './Ground';
-import SetIntervalX from '../utils/SetIntervalX';
 
 import Mouse from '../controller/Mouse';
 
@@ -33,6 +32,7 @@ class Game {
   elements: any[];
   viewport: Viewport;
   sprite: PIXI.Sprite;
+  background: PIXI.Graphics;
 
   constructor(Box2D) {
     this.config = config;
@@ -63,9 +63,6 @@ class Game {
     // World map
     this.world = new World(this);
 
-    // Target
-    this.target = new Target(this);
-
     this.box = new Box(this);
     this.boxes = [];
 
@@ -87,6 +84,12 @@ class Game {
     const FPS = 60;
     // Add boxes
 
+    // Base background
+    this.background = new PIXI.Graphics();
+    this.background.beginFill(0x566573);
+    this.background.drawRect(0, 0, window.innerWidth, window.innerHeight);
+    this.app.stage.addChild(this.background);
+
     // add the viewport to the stage
     this.app.stage.addChild(this.viewport);
 
@@ -98,6 +101,9 @@ class Game {
     this.sprite.tint = 0xff0000;
     this.sprite.width = this.sprite.height = 100;
     this.sprite.position.set(100, 100);
+
+    // Target
+    this.target = new Target(this);
 
     // Ticker
     const ticker = PIXI.Ticker.shared;
