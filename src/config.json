@@ -1,11 +1,11 @@
 {
   "canvas": {
-    "width": 1000,
-    "height": 1000
+    "width": 2500,
+    "height": 2500
   },
   "grid": {
-    "cols": 20,
-    "rows": 20
+    "cols": 100,
+    "rows": 100
   },
   "tick": 5,
   "elements": {

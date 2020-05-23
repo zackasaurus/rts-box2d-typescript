@@ -45,6 +45,14 @@ class Game {
       // transparent: true,
       // resizeTo: window,
     });
+
+    // Base background
+    this.background = new PIXI.Graphics();
+    this.background.beginFill(0x566573);
+    this.background.drawRect(0, 0, window.innerWidth, window.innerHeight);
+    this.app.stage.addChild(this.background);
+
+    // Make world size 100m x 100m
     this.viewport = new Viewport({
       screenWidth: window.innerWidth,
       screenHeight: window.innerHeight,
@@ -53,7 +61,16 @@ class Game {
 
       interaction: this.app.renderer.plugins.interaction, // the interaction module is important for wheel to work properly when renderer.view is placed or scaled
     });
-    this.viewport.clicked();
+
+    // add the viewport to the stage
+    this.app.stage.addChild(this.viewport);
+
+    // activate plugins
+    this.viewport.drag().pinch().wheel().decelerate();
+
+    this.viewport.on('clicked', (e) =>
+      console.log('clicked (' + e.world.x + ',' + e.world.y + ')')
+    );
 
     // Mouse events
     this.mouse = new Mouse(this);
@@ -85,23 +102,11 @@ class Game {
     const FPS = 60;
     // Add boxes
 
-    // Base background
-    this.background = new PIXI.Graphics();
-    this.background.beginFill(0x566573);
-    this.background.drawRect(0, 0, window.innerWidth, window.innerHeight);
-    this.app.stage.addChild(this.background);
-
-    // add the viewport to the stage
-    this.app.stage.addChild(this.viewport);
-
-    // activate plugins
-    this.viewport.drag().pinch().wheel().decelerate();
-
     // add a red box
-    this.sprite = this.viewport.addChild(new PIXI.Sprite(PIXI.Texture.WHITE));
-    this.sprite.tint = 0xff0000;
-    this.sprite.width = this.sprite.height = 100;
-    this.sprite.position.set(100, 100);
+    // this.sprite = this.viewport.addChild(new PIXI.Sprite(PIXI.Texture.WHITE));
+    // this.sprite.tint = 0xff0000;
+    // this.sprite.width = this.sprite.height = 100;
+    // this.sprite.position.set(100, 100);
 
     // Target
     this.target = new Target(this);

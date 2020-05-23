@@ -17,12 +17,12 @@ class Boundary {
     this.Box2D = this.world.game.physics.Box2D;
     this.rand = Math.random() * 1000;
 
-    // Absolute units
+    // World units
     this.dimensions = {
-      x: 100,
-      y: 400,
-      w: 25,
-      h: 500,
+      x: 1,
+      y: 4,
+      w: 5,
+      h: 50,
     };
     this.max = {
       force: 100,
@@ -32,8 +32,8 @@ class Boundary {
     this.bd = new this.Box2D.b2BodyDef();
     this.bd.type = 0;
     this.bd.position.Set(
-      (this.dimensions.x - this.dimensions.w / 2) / this.physics.scale,
-      (this.dimensions.y - this.dimensions.h / 2) / this.physics.scale
+      this.dimensions.x - this.dimensions.w / 2,
+      this.dimensions.y - this.dimensions.h / 2
     );
 
     // Create body
@@ -69,7 +69,7 @@ class Boundary {
 
   update() {
     const pos = this.body.GetPosition();
-    console.log(pos);
+    // console.log(pos);
     const temp = new this.physics.Box2D.b2Vec2();
     temp.SelfAdd(pos);
     temp.SelfMul(this.world.game.physics.scale);
