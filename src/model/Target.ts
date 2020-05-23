@@ -17,7 +17,7 @@ class Target {
     this.circle.endFill();
     this.circle.x = this.position.x;
     this.circle.y = this.position.y;
-    this.game.app.stage.addChild(this.circle);
+    this.game.viewport.addChild(this.circle);
   }
   update() {
     this.circle.position = this.position;
