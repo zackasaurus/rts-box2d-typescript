@@ -12,11 +12,11 @@
   "include": [
     "src/*",
     "src/model/Physics.ts",
-    "src/model/Trapezoid.ts",
+    "src/model/Rectangle.ts",
     "src/model/Game.ts",
     "src/model/Box.ts",
     "src/model/Ground.ts",
-    "src/model/box2d"
+    "src/lib/box2d"
   ],
   "exclude": ["node_modules"]
 }

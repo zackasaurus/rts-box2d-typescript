@@ -1,4 +1,5 @@
-class Vector2d {
+const { scale } = require('../config.json');
+class Vector2D {
   x: number;
   y: number;
   constructor(x = 0, y = 0) {
@@ -59,4 +60,4 @@ class Vector2d {
   }
 }
 
-export default Vector2d;
+export default Vector2D;

@@ -2,7 +2,7 @@ import Game from './Game';
 import * as PIXI from 'pixi.js';
 import Vector2D from '../utils/Vector2D';
 
-class Trapezoid {
+class Rectangle {
   game: Game;
   graphics: PIXI.Graphics;
   dimensions: { x: number; y: number; w: number; h: number };
@@ -171,8 +171,9 @@ class Trapezoid {
     temp.SelfMul(this.game.physics.scale);
     // temp.SelfSub({ x: -this.dimensions.w / 2, y: -this.dimensions.h / 2 });
     this.sprite.position = temp;
+    // console.log(this.sprite.position);
 
     this.sprite.rotation = this.body.GetAngle();
   }
 }
-export default Trapezoid;
+export default Rectangle;
