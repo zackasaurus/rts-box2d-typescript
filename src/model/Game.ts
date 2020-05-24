@@ -33,6 +33,7 @@ class Game {
   viewport: Viewport;
   sprite: PIXI.Sprite;
   background: PIXI.Graphics;
+  graphics: PIXI.Graphics;
 
   constructor(Box2D) {
     this.config = config;
@@ -52,12 +53,11 @@ class Game {
     this.background.drawRect(0, 0, window.innerWidth, window.innerHeight);
     this.app.stage.addChild(this.background);
 
-    // Make world size 100m x 100m
     this.viewport = new Viewport({
       screenWidth: window.innerWidth,
       screenHeight: window.innerHeight,
-      worldWidth: 1000,
-      worldHeight: 1000,
+      worldWidth: this.width,
+      worldHeight: this.height,
 
       interaction: this.app.renderer.plugins.interaction, // the interaction module is important for wheel to work properly when renderer.view is placed or scaled
     });
@@ -103,10 +103,32 @@ class Game {
     // Add boxes
 
     // add a red box
-    // this.sprite = this.viewport.addChild(new PIXI.Sprite(PIXI.Texture.WHITE));
-    // this.sprite.tint = 0xff0000;
-    // this.sprite.width = this.sprite.height = 100;
-    // this.sprite.position.set(100, 100);
+    this.sprite = this.viewport.addChild(new PIXI.Sprite(PIXI.Texture.WHITE));
+    this.sprite.tint = 0xff0000;
+    this.sprite.anchor.set(0.5);
+    this.sprite.width = this.sprite.height = 100;
+    this.sprite.x = 100;
+    this.sprite.y = 100;
+    this.sprite.position.set(100, 100);
+    this.sprite.rotation = 0.1;
+
+    // Graphics
+    // this.graphics = this.viewport.addChild(new PIXI.Graphics());
+    // this.graphics.beginFill(0xff33ff);
+    // // this.graphics.position.x = this.dimensions.x + this.dimensions.w / 2;
+    // // this.graphics.position.y = this.dimensions.y + this.dimensions.h / 2;
+    // // this.graphics.transform()
+    // // this.graphics.drawRect(0, 0, 50, 50);
+    // this.graphics.width = this.graphics.height = 100;
+
+    // this.graphics.pivot.set(25, 25);
+    // this.graphics.rotation = -0.1;
+    // this.graphics.drawRect();
+    // console.log(this.graphics);
+    // this.sprite.anchor.set(-this.sprite.width / 2, -this.sprite.height / 2);
+
+    // this.sprite.rotation = 0.3;
+    // console.log(this.sprite);
 
     // Target
     this.target = new Target(this);
@@ -120,6 +142,8 @@ class Game {
       // 6 velocity iterations, 2 position iterations is the recommended settings
       // https://box2d.org/documentation/md__d_1__git_hub_box2d_docs_hello.html
       this.physics.world.Step(time / FPS, 6, 2);
+
+      // this.sprite.rotation += 0.01;
 
       // Update graphics world
       this.world.update();

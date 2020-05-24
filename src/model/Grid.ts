@@ -11,7 +11,7 @@ class Grid {
     this.dimensions = this.world.dimensions;
 
     // Background
-    this.background.beginFill(0xfdfefe, 0.8);
+    this.background.beginFill(0xfdfefe, 1);
     this.background.position.x = this.dimensions.x;
     this.background.position.y = this.dimensions.y;
     this.background.drawRect(

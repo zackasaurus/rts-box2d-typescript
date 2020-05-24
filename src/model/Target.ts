@@ -7,8 +7,8 @@ class Target {
   constructor(game) {
     this.game = game;
     this.position = new this.game.physics.Box2D.b2Vec2(
-      this.game.width / 2,
-      this.game.height / 2
+      this.game.width / 5,
+      this.game.height / 5
     );
 
     this.circle = new PIXI.Graphics();

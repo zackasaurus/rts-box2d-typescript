@@ -75,7 +75,7 @@ class Box {
     const temp = new this.physics.Box2D.b2Vec2();
     temp.SelfAdd(pos);
     temp.SelfMul(this.physics.scale);
-    temp.SelfSub({ x: +this.dimensions.w / 2, y: -this.dimensions.h / 2 });
+    temp.SelfSub({ x: this.dimensions.w / 2, y: -this.dimensions.h / 2 });
     this.graphics.position = temp;
     // console.log(this.graphics.position);
     this.graphics.rotation = this.body.GetAngle();
