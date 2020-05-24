@@ -14,7 +14,11 @@ class Trapezoid {
   skeleton: PIXI.Graphics;
   rand: number;
   physics: any;
-  max: { angular: { force: number }; force: number; speed: number };
+  max: {
+    angular: { force: number; speed: number };
+    force: number;
+    speed: number;
+  };
   sprite: PIXI.Sprite;
   constructor(game: Game) {
     this.game = game;
@@ -30,6 +34,7 @@ class Trapezoid {
     this.max = {
       angular: {
         force: 500,
+        speed: 5,
       },
       force: 100,
       speed: 15,
@@ -80,17 +85,6 @@ class Trapezoid {
     this.game.viewport.addChild(this.sprite);
   }
   seek() {
-    // const desired = new this.physics.Box2D.b2Vec2();
-    // desired.SelfSub(this.graphics.position);
-    // desired.SelfAdd(this.game.target.position);
-    // desired.SelfNormalize();
-    // desired.SelfMul(10);
-
-    // const steer = new this.physics.Box2D.b2Vec2();
-    // steer.SelfAdd(desired);
-    // steer.SelfSub(this.body.GetLinearVelocity());
-    // steer.SelfMul(this.game.physics.scale);
-
     // Find desired vector
     const desired = new Vector2D();
     desired.subtract(this.sprite.position);
@@ -121,19 +115,19 @@ class Trapezoid {
       desired = -Math.sign(desired) * (2 * Math.PI - Math.abs(desired));
     }
 
-    desired *= 20;
+    desired *= this.max.angular.speed;
     // console.log(desired);
     // console.log(desired);
     let steer = desired - this.body.GetAngularVelocity();
     steer *= this.game.physics.scale;
-    console.log(steer);
-    console.log(steer);
+    // console.log(steer);
+    // console.log(steer);
 
     // console.log(this.body.GetAngularVelocity());
-    if (steer > this.max.angular.force) {
-      return this.max.angular.force;
+    if (Math.abs(steer) > this.max.angular.force) {
+      return Math.sign(steer) * this.max.angular.force;
     }
-    console.log(steer);
+    // console.log(steer);
     return steer;
     // desired -= this.body.GetAngle();
     // desired += linearForce.angle()

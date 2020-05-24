@@ -10,7 +10,7 @@
   },
   "tick": 5,
   "elements": {
-    "total": 1
+    "total": 2
   },
   "terrain": {
     "granularity": 25,
