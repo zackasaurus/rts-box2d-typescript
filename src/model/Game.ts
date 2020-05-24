@@ -1,5 +1,6 @@
 import * as PIXI from 'pixi.js';
 import { Viewport } from 'pixi-viewport';
+import Stats from '../lib/stats';
 import Physics from './Physics';
 import Target from './Target';
 import World from './World';
@@ -8,6 +9,7 @@ import Rectangle from './Rectangle';
 import Ground from './Ground';
 import Colors from '../utils/Colors';
 import Mouse from '../controller/Mouse';
+import Keys from '../controller/Keys';
 
 const config = require('../config.json');
 // Look into: importing as all gives ts error TS2322..
@@ -34,6 +36,8 @@ class Game {
   sprite: PIXI.Sprite;
   background: PIXI.Graphics;
   graphics: PIXI.Graphics;
+  border: number;
+  keys: any;
 
   constructor(Box2D) {
     this.config = config;
@@ -44,7 +48,7 @@ class Game {
       height: window.innerHeight,
       antialias: true,
       // transparent: true,
-      // resizeTo: window,
+      resizeTo: window,
     });
 
     // Base background
@@ -53,6 +57,7 @@ class Game {
     this.background.drawRect(0, 0, window.innerWidth, window.innerHeight);
     this.app.stage.addChild(this.background);
 
+    // Viewport
     this.viewport = new Viewport({
       screenWidth: window.innerWidth,
       screenHeight: window.innerHeight,
@@ -65,33 +70,61 @@ class Game {
     // add the viewport to the stage
     this.app.stage.addChild(this.viewport);
 
+    this.border = 500;
+    // window.onresize(() => {
+    //   this.viewport.resize(
+    //     window.innerWidth,
+    //     window.innerHeight,
+    //     this.viewport.worldWidth,
+    //     this.viewport.worldHeight
+    //   );
+    // });
+
     // activate plugins
-    this.viewport.drag().pinch().wheel().decelerate();
+    this.viewport
+      // index.d.ts file has not yet been updated with keyToPress
+      // @ts-ignore
+      // { keyToPress: ['ShiftLeft'] }
+      .drag()
+      .pinch()
+      .wheel()
+      .decelerate()
+      .clamp({
+        left: -this.border,
+        right: this.viewport.worldWidth + this.border,
+        top: -this.border,
+        bottom: this.viewport.worldHeight + this.border,
+        underflow: 'center',
+      })
+      .clampZoom({
+        minWidth: 500,
+        minHeight: 500,
+        maxWidth: 4000,
+        maxHeight: 4000,
+      });
+    // @ts-ignore
 
-    this.viewport.on('clicked', (e) =>
-      console.log('clicked (' + e.world.x + ',' + e.world.y + ')')
-    );
+    // console.log(this.viewport.drag({ keyToPress: ['keyA', 'a', 's', 'd'] }));
+    // .resize(
+    //   window.innerWidth,
+    //   window.innerHeight,
+    //   this.viewport.worldWidth,
+    //   this.viewport.worldHeight
+    // );
 
-    // Mouse events
     this.mouse = new Mouse(this);
+    this.keys = new Keys(this);
 
-    // Physics engine
     this.physics = new Physics(Box2D);
 
-    // Graphics world
     this.world = new World(this);
 
-    this.box = new Box(this);
-    this.boxes = [];
-
-    // Elements
     this.elements = [];
 
     for (let i = 0; i < this.config.elements.total; i++) {
       this.elements.push(new Rectangle(this));
     }
 
-    // this.trapezoid = new Trapezoid(this);
     console.log(this.app);
     console.log(this.app.view);
   }
@@ -102,72 +135,35 @@ class Game {
     const FPS = 60;
     // Add boxes
 
-    // add a red box
-    // this.sprite = this.viewport.addChild(new PIXI.Sprite(PIXI.Texture.WHITE));
-    // this.sprite.tint = 0xff0000;
-    // this.sprite.anchor.set(0.5);
-    // this.sprite.width = this.sprite.height = 100;
-    // this.sprite.x = 100;
-    // this.sprite.y = 100;
-    // this.sprite.position.set(100, 100);
-    // this.sprite.rotation = 0.1;
-
-    // Graphics
-    this.graphics = this.viewport.addChild(new PIXI.Graphics());
-    this.graphics.x = 0;
-    this.graphics.y = 0;
-    this.graphics.beginFill(Colors['belize-hole']['shade-4'], 1);
-    // this.graphics.lineStyle(2, 0x000000, 1);
-    this.graphics.drawPolygon([
-      new PIXI.Point(-10, -25),
-      new PIXI.Point(10, -25),
-      new PIXI.Point(25, 25),
-      new PIXI.Point(-25, 25),
-      // new PIXI.Point(0, 300),
-    ]);
-    // this.graphics.set;
-    this.graphics.pivot.set(0, 0);
-    this.graphics.rotation = -0.1;
-    // this.graphics.drawRect();
-    // console.log(this.graphics);
-    // this.sprite.anchor.set(-this.sprite.width / 2, -this.sprite.height / 2);
-
-    // this.sprite.rotation = 0.3;
-    // console.log(this.sprite);
-
     // Target
     this.target = new Target(this);
+
+    // Stats
+    var stats = new Stats();
+    stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
+    document.body.appendChild(stats.dom);
 
     // Ticker
     const ticker = PIXI.Ticker.shared;
     ticker.add((time) => {
-      // console.log(time);
-
+      stats.begin();
       // Update physics world
       // 6 velocity iterations, 2 position iterations is the recommended settings
       // https://box2d.org/documentation/md__d_1__git_hub_box2d_docs_hello.html
       this.physics.world.Step(time / FPS, 6, 2);
 
-      this.graphics.rotation += 0.01;
+      // Update target
+      this.target.update();
 
       // Update graphics world
       this.world.update();
 
-      // Update target
-      this.target.update();
-      // console.log();
-
-      // Update Trapezoid
-      // this.trapezoid.update();
-
-      // Update Boxes
-      this.box.update();
-
+      // Elements
       this.elements.forEach((element) => {
         element.update();
       });
 
-      // this.ground.update();
+      stats.end();
     });
   }
 }

@@ -1,5 +1,6 @@
 import World from './World';
 import * as PIXI from 'pixi.js';
+import Colors from '../utils/Colors';
 
 class Grid {
   dimensions: { x: number; y: number; w: number; h: number };
@@ -33,7 +34,7 @@ class Grid {
     // Grid lines
     for (let i = 0; i < width; i += width / cols) {
       const line = new PIXI.Graphics();
-      line.lineStyle(2, 0x000000, 0.2);
+      line.lineStyle(2, Colors['concrete']['shade-3'], 1);
       line.moveTo(i, 0);
       line.lineTo(i, height);
       this.container.addChild(line);
@@ -41,7 +42,7 @@ class Grid {
 
     for (let i = 0; i < height; i += height / rows) {
       const line = new PIXI.Graphics();
-      line.lineStyle(2, 0x000000, 0.2);
+      line.lineStyle(2, Colors['concrete']['shade-3'], 1);
       line.moveTo(0, i);
       line.lineTo(width, i);
       this.container.addChild(line);

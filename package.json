@@ -11,6 +11,7 @@
     "box2d.ts": "^1.0.2",
     "pixi-viewport": "^4.11.1",
     "pixi.js": "^5.2.3",
+    "stats.js": "^0.17.0",
     "typescript": "^3.8.3"
   },
   "devDependencies": {
