@@ -267,6 +267,11 @@
   dependencies:
     "@pixi/core" "5.2.3"
 
+"@pixi/filter-motion-blur@^3.1.1":
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/@pixi/filter-motion-blur/-/filter-motion-blur-3.1.1.tgz#5472738ac168f84ba2dc6eb8f4b329c4fee8ec96"
+  integrity sha512-5AjQJseuQsDJi7zBsas7rQexQO7LfZcA274FxTFOZ9TeYtdqUGzYilPA8a9oAec6Z+iGkQmAoK/FR3ybCqNPmQ==
+
 "@pixi/filter-noise@5.2.3":
   version "5.2.3"
   resolved "https://registry.yarnpkg.com/@pixi/filter-noise/-/filter-noise-5.2.3.tgz#911f7adeedf3d40a76108c5c3a18b4ae70ecaf49"

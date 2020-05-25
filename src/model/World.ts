@@ -6,6 +6,7 @@ class World {
   dimensions: { x: number; y: number; w: number; h: number };
   grid: Grid;
   boundary: Boundary;
+  soldiers: Soldier[];
   soldier: Soldier;
   constructor(public game: Game) {
     this.dimensions = {
@@ -18,11 +19,18 @@ class World {
     this.grid = new Grid(this);
     this.boundary = new Boundary(this);
 
-    this.soldier = new Soldier(this);
+    this.soldiers = [];
+    for (let i = 0; i < 10; i++) {
+      this.soldiers.push(new Soldier(this, i));
+    }
+    // this.soldier =
   }
   update() {
     this.boundary.update();
-    this.soldier.update();
+    this.soldiers.forEach((soldier) => {
+      soldier.update();
+    });
+    // this.soldier.update();
     // update
   }
 }

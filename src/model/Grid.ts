@@ -12,7 +12,7 @@ class Grid {
     this.dimensions = this.world.dimensions;
 
     // Background
-    this.background.beginFill(0xfdfefe, 1);
+    this.background.beginFill(Colors['midnight-blue']['shade-7'], 0.5);
     this.background.position.x = this.dimensions.x;
     this.background.position.y = this.dimensions.y;
     this.background.drawRect(
@@ -34,7 +34,7 @@ class Grid {
     // Grid lines
     for (let i = 0; i < width; i += width / cols) {
       const line = new PIXI.Graphics();
-      line.lineStyle(2, Colors['concrete']['shade-3'], 1);
+      line.lineStyle(2, Colors['midnight-blue']['shade-5'], 1);
       line.moveTo(i, 0);
       line.lineTo(i, height);
       this.container.addChild(line);
@@ -42,7 +42,7 @@ class Grid {
 
     for (let i = 0; i < height; i += height / rows) {
       const line = new PIXI.Graphics();
-      line.lineStyle(2, Colors['concrete']['shade-3'], 1);
+      line.lineStyle(2, Colors['midnight-blue']['shade-5'], 1);
       line.moveTo(0, i);
       line.lineTo(width, i);
       this.container.addChild(line);

@@ -6,13 +6,14 @@ class Vector2D {
     this.x = x;
     this.y = y;
   }
+  static distance(vectorA, vectorB) {
+    return Math.sqrt(
+      Math.abs(vectorA.x - vectorB.x) ** 2 +
+        Math.abs(vectorA.y - vectorB.y) ** 2
+    );
+  }
   length() {
     return Math.sqrt(Math.abs(this.x) ** 2 + Math.abs(this.y) ** 2);
-  }
-  distance(vector) {
-    return Math.sqrt(
-      Math.abs(this.x - vector.x) ** 2 + Math.abs(this.y - vector.y) ** 2
-    );
   }
   dot(vector) {
     return this.x * vector.x + this.y * vector.y;

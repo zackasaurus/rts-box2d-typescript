@@ -1,5 +1,6 @@
 import Game from '../Game';
 import * as PIXI from 'pixi.js';
+import { MotionBlurFilter } from '@pixi/filter-motion-blur';
 import { vectorPixelsToWorld } from '../../utils/Box2DHelpers';
 import Vector2D from '../../utils/Vector2D';
 import Colors from '../../utils/Colors';
@@ -20,13 +21,18 @@ class Soldier {
   max: {
     angular: { force: number; speed: number };
     linear: { force: number; speed: number };
+    separate: { radius: number };
+    alignment: { radius: number };
+    approach: { radius: number };
   };
   sprite: PIXI.Sprite;
 
   vertices: [number, number][];
-  constructor(public world: World) {
+  scale: any;
+  constructor(public world: World, public id: number) {
     this.game = world.game;
     this.physics = this.game.physics;
+    this.scale = this.game.config.scale;
     this.Box2D = this.game.physics.Box2D;
 
     this.position = {
@@ -40,8 +46,17 @@ class Soldier {
         speed: 5,
       },
       linear: {
-        force: 100,
-        speed: 25,
+        force: 75,
+        speed: 20,
+      },
+      separate: {
+        radius: 2,
+      },
+      alignment: {
+        radius: 10,
+      },
+      approach: {
+        radius: 20,
       },
     };
 
@@ -59,10 +74,10 @@ class Soldier {
 
     // Vertices need to go clockwise
     this.vertices = [
-      [-10, -25],
-      [10, -25],
-      [25, 25],
-      [-25, 25],
+      [-5, -25],
+      [5, -25],
+      [15, 25],
+      [-15, 25],
     ];
     // this.vertices.push(new Vector2D(-10, -25));
     // this.vertices.push(new Vector2D(10, -25));
@@ -95,35 +110,130 @@ class Soldier {
     this.graphics = new PIXI.Graphics();
     this.graphics.x = 400;
     this.graphics.y = 400;
-    this.graphics.beginFill(Colors['belize-hole']['shade-4'], 1);
+    this.graphics.beginFill(0xffffff, 1);
+    this.graphics.lineStyle(3, Colors['belize-hole']['shade-4']);
 
     this.graphics.drawPolygon(
       this.vertices.map((vertice: [number, number]) => {
         return new PIXI.Point(vertice[0], vertice[1]);
       })
     );
+    // this.graphics.filters = [new MotionBlurFilter([1, 2], 30)];
     // Stage
     this.game.viewport.addChild(this.graphics);
   }
-  seek() {
+  combine(forces: Vector2D[], reducer: number = 1) {
+    const combinedForce = new Vector2D();
+    forces.forEach((force) => {
+      combinedForce.add(force);
+    });
+    // console.log(reducer);
+    combinedForce.multiply(reducer);
+    return combinedForce;
+  }
+  approach() {
+    const distance = Vector2D.distance(
+      this.body.GetPosition(),
+      vectorPixelsToWorld(this.game.target.position)
+    );
+    if (distance < this.max.approach.radius) {
+      return (distance / this.max.approach.radius) * this.max.linear.speed;
+    }
+    return this.max.linear.speed;
+  }
+  separate(weight: number = 1) {
+    const sum = new Vector2D();
+    let count = 0;
+
+    this.world.soldiers.forEach((soldier) => {
+      const { id } = soldier;
+
+      const distance = Vector2D.distance(
+        this.body.GetPosition(),
+        soldier.body.GetPosition()
+      );
+      // console.log(distance);
+      if (this.id !== id && distance < this.max.separate.radius) {
+        const difference = new Vector2D();
+        difference.add(this.body.GetPosition());
+        difference.subtract(soldier.body.GetPosition());
+        difference.divide(distance);
+        // console.log(difference);
+        sum.add(difference);
+        count++;
+      }
+    });
+    if (count > 0) {
+      sum.divide(count);
+      sum.normalize();
+      sum.multiply(this.approach());
+
+      sum.subtract(this.body.GetLinearVelocity());
+      sum.limit(this.max.linear.force);
+    }
+    sum.multiply(weight);
+    // console.log(sum);
+
+    // if (isNaN(sum.x)) {
+    //   sum.x = 0;
+    // }
+    // if (isNaN(sum.y)) {
+    //   sum.y = 0;
+    // }
+    return sum;
+  }
+
+  alignment(weight: number = 1) {
+    const sum = new Vector2D();
+    let count = 0;
+
+    this.world.soldiers.forEach((soldier) => {
+      const { id } = soldier;
+      const distance = Vector2D.distance(
+        this.body.GetPosition(),
+        soldier.body.GetPosition()
+      );
+      // console.log(soldier.body.GetLinearVelocity());
+      if (this.id !== id && distance < this.max.alignment.radius) {
+        // console.log(soldier.body.GetLinearVelocity());
+        sum.add(soldier.body.GetLinearVelocity());
+        count++;
+      }
+    });
+
+    // console.log(sum);
+    if (count > 0) {
+      sum.divide(count);
+      sum.normalize();
+      sum.multiply(this.approach());
+
+      sum.subtract(this.body.GetLinearVelocity());
+      sum.limit(this.max.linear.force);
+    } else {
+      return new Vector2D();
+    }
+    if (isNaN(sum.x)) {
+      sum.x = 0;
+    }
+    if (isNaN(sum.y)) {
+      sum.y = 0;
+    }
+    sum.multiply(weight);
+    return sum;
+  }
+
+  seek(weight: number = 1, approach: boolean = false) {
     // Find desired vector
     const desired = new Vector2D();
-    // console.log(desired);
-    desired.subtract(this.graphics.position);
-    // console.log(desired);
-    desired.add(this.game.target.position);
-    // console.log(desired);
-    desired.normalize(this.max.linear.speed);
-    // console.log(desired);
-
-    // console.log(this.graphics.position);
+    desired.subtract(this.body.GetPosition());
+    desired.add(vectorPixelsToWorld(this.game.target.position));
+    desired.normalize();
+    desired.multiply(this.approach());
 
     // Steer vector
     const steer = new Vector2D();
     steer.add(desired);
     steer.subtract(this.body.GetLinearVelocity());
-    steer.multiply(this.max.linear.speed);
-
     // Limit force
     steer.limit(this.max.linear.force);
 
@@ -159,7 +269,15 @@ class Soldier {
     return steer;
   }
   update() {
-    const force = this.seek();
+    // let approach = this.approach();
+    // let force = this.combine([this.seek()]);
+    let force = this.combine([
+      this.seek(),
+      this.separate(10),
+      this.alignment(1),
+    ]);
+
+    // console.log(force);
     this.body.ApplyForce(
       new this.physics.Box2D.b2Vec2(force.x, force.y),
       this.body.GetPosition()

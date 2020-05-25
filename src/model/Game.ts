@@ -119,11 +119,11 @@ class Game {
 
     this.world = new World(this);
 
-    this.elements = [];
+    // this.elements = [];
 
-    for (let i = 0; i < this.config.elements.total; i++) {
-      this.elements.push(new Rectangle(this));
-    }
+    // for (let i = 0; i < this.config.elements.total; i++) {
+    //   this.elements.push(new Rectangle(this));
+    // }
 
     console.log(this.app);
     console.log(this.app.view);
@@ -146,7 +146,9 @@ class Game {
     // Ticker
     const ticker = PIXI.Ticker.shared;
     ticker.add((time) => {
+      // Begin Stats
       stats.begin();
+
       // Update physics world
       // 6 velocity iterations, 2 position iterations is the recommended settings
       // https://box2d.org/documentation/md__d_1__git_hub_box2d_docs_hello.html
@@ -159,10 +161,11 @@ class Game {
       this.world.update();
 
       // Elements
-      this.elements.forEach((element) => {
-        element.update();
-      });
+      // this.elements.forEach((element) => {
+      //   element.update();
+      // });
 
+      // End Stats
       stats.end();
     });
   }
