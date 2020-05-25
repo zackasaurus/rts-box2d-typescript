@@ -3,6 +3,8 @@ const Colors = {
     'shade-4': 0x7fb3d5,
   },
   concrete: {
+    'shade-1': 0xf4f6f6,
+    'shade-2': 0xeaeded,
     'shade-3': 0xd5dbdb,
   },
   'midnight-blue': {

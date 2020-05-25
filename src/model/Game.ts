@@ -6,9 +6,10 @@ import Target from './Target';
 import World from './World';
 import Rectangle from './Rectangle';
 import Ground from './Ground';
-import Colors from '../utils/Colors';
+import Controls from '../controller';
 import Mouse from '../controller/Mouse';
 import Keys from '../controller/Keys';
+import Panel from './panel';
 
 const config = require('../config.json');
 // Look into: importing as all gives ts error TS2322..
@@ -37,30 +38,23 @@ class Game {
   keys: any;
   radar: PIXI.Container;
   units: PIXI.Container;
-  panel: PIXI.Application;
+  panel: Panel;
+  controls: Controls;
 
   constructor(Box2D) {
     this.config = config;
     this.width = this.config.canvas.width;
     this.height = this.config.canvas.height;
+
     this.app = new PIXI.Application({
       width: window.innerWidth,
       height: window.innerHeight,
       antialias: true,
-      // transparent: true,
       resizeTo: window,
     });
-    this.panel = new PIXI.Application({
-      width: 200,
-      height: 500,
-      antialias: true,
-      // transparent: true,
-      backgroundColor: 0x123456,
-      // resizeTo: window,
-    });
+
     // Adding PIXI application to DOM and setting id to game
     document.body.appendChild(this.app.view).setAttribute('id', 'game');
-    document.body.appendChild(this.panel.view).setAttribute('id', 'panel');
 
     // Base background
     this.background = new PIXI.Graphics();
@@ -82,14 +76,6 @@ class Game {
     this.app.stage.addChild(this.viewport);
 
     this.border = 500;
-    // window.onresize(() => {
-    //   this.viewport.resize(
-    //     window.innerWidth,
-    //     window.innerHeight,
-    //     this.viewport.worldWidth,
-    //     this.viewport.worldHeight
-    //   );
-    // });
 
     // activate plugins
     this.viewport
@@ -114,12 +100,13 @@ class Game {
         maxHeight: 4000,
       });
 
-    this.mouse = new Mouse(this);
-    this.keys = new Keys(this);
+    this.controls = new Controls(this);
 
     this.physics = new Physics(Box2D);
 
     this.world = new World(this);
+
+    this.panel = new Panel(this);
   }
   start() {
     // FPS
@@ -140,12 +127,11 @@ class Game {
       // Begin Stats
       stats.begin();
 
+      this.controls.update();
       // Update physics world
       // 6 velocity iterations, 2 position iterations is the recommended settings
       // https://box2d.org/documentation/md__d_1__git_hub_box2d_docs_hello.html
       this.physics.world.Step(time / FPS, 6, 2);
-
-      this.keys.update(time);
 
       // Update target
       this.target.update();

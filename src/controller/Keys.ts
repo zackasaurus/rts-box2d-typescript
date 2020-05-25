@@ -1,11 +1,10 @@
 import Game from '../model/Game';
 import { Viewport } from 'pixi-viewport';
+import Controls from '.';
 class Keys {
-  game: Game;
   right: boolean;
-  constructor(game) {
+  constructor(public controls: Controls) {
     this.right = false;
-    this.game = game;
     document.addEventListener('keydown', ({ key, code }) => {
       switch (key) {
         case 'd':

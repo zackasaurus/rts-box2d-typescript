@@ -1,0 +1,3 @@
+class WallPhysics {
+  constructor() {}
+}

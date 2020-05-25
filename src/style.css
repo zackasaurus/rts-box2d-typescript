@@ -16,4 +16,7 @@ canvas {
   position: fixed;
   top: 0;
   left: 0;
+  backdrop-filter: blur(10px);
+  border-bottom: 4px solid rgba(255, 255, 255, 0.3);
+  border-right: 4px solid rgba(255, 255, 255, 0.3);
 }

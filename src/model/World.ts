@@ -3,6 +3,8 @@ import Grid from './Grid';
 import Boundary from './Boundary';
 import Game from './Game';
 import Soldier from './units/attack/soldier';
+import Preview from './preview';
+import Wall from './units/defense/wall';
 class World {
   dimensions: { x: number; y: number; w: number; h: number };
   grid: Grid;
@@ -11,6 +13,9 @@ class World {
   soldier: Soldier;
   units: PIXI.Container;
   range: PIXI.Container;
+  preview: Preview;
+  elements: {};
+  id: number;
   constructor(public game: Game) {
     this.dimensions = {
       x: 0,
@@ -18,7 +23,7 @@ class World {
       w: this.game.width,
       h: this.game.height,
     };
-
+    this.id = 100;
     this.grid = new Grid(this);
     this.boundary = new Boundary(this);
 
@@ -32,9 +37,17 @@ class World {
     for (let i = 0; i < 20; i++) {
       this.soldiers.push(new Soldier(this, i));
     }
+    this.elements = {};
+    this.preview = new Preview(this);
     // this.soldier =
   }
+  create(unit: 'string', position: { x: number; y: number }) {
+    const id = this.id;
+    this.elements[id] = new Wall(id, position, this);
+    this.id++;
+  }
   update() {
+    this.preview.update();
     this.boundary.update();
     this.soldiers.forEach((soldier) => {
       soldier.update();
