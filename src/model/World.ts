@@ -5,6 +5,7 @@ import Game from './Game';
 import Soldier from './units/attack/soldier';
 import Preview from './preview';
 import Wall from './units/defense/wall';
+import WallConstants from './units/defense/wall/wall.constants';
 class World {
   dimensions: { x: number; y: number; w: number; h: number };
   grid: Grid;
@@ -38,12 +39,12 @@ class World {
       this.soldiers.push(new Soldier(this, i));
     }
     this.elements = {};
-    this.preview = new Preview(this);
+    this.preview = new Preview('wall', this);
     // this.soldier =
   }
-  create(unit: 'string', position: { x: number; y: number }) {
+  create(unit: 'string') {
     const id = this.id;
-    this.elements[id] = new Wall(id, position, this);
+    this.elements[id] = new Wall(id, this.preview.position, this);
     this.id++;
   }
   update() {
