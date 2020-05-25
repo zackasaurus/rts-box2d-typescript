@@ -38,6 +38,8 @@ class Game {
   graphics: PIXI.Graphics;
   border: number;
   keys: any;
+  radar: PIXI.Container;
+  units: PIXI.Container;
 
   constructor(Box2D) {
     this.config = config;
@@ -111,6 +113,9 @@ class Game {
     //   this.viewport.worldWidth,
     //   this.viewport.worldHeight
     // );
+    this.radar = new PIXI.Container();
+
+    this.units = new PIXI.Container();
 
     this.mouse = new Mouse(this);
     this.keys = new Keys(this);
@@ -118,6 +123,9 @@ class Game {
     this.physics = new Physics(Box2D);
 
     this.world = new World(this);
+
+    this.viewport.addChild(this.radar);
+    this.viewport.addChild(this.units);
 
     // this.elements = [];
 
@@ -153,6 +161,8 @@ class Game {
       // 6 velocity iterations, 2 position iterations is the recommended settings
       // https://box2d.org/documentation/md__d_1__git_hub_box2d_docs_hello.html
       this.physics.world.Step(time / FPS, 6, 2);
+
+      this.keys.update(time);
 
       // Update target
       this.target.update();

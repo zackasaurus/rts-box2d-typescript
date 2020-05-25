@@ -20,7 +20,7 @@ class World {
     this.boundary = new Boundary(this);
 
     this.soldiers = [];
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < 20; i++) {
       this.soldiers.push(new Soldier(this, i));
     }
     // this.soldier =

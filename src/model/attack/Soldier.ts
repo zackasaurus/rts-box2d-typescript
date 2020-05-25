@@ -29,6 +29,7 @@ class Soldier {
 
   vertices: [number, number][];
   scale: any;
+  radar: PIXI.Graphics;
   constructor(public world: World, public id: number) {
     this.game = world.game;
     this.physics = this.game.physics;
@@ -118,9 +119,14 @@ class Soldier {
         return new PIXI.Point(vertice[0], vertice[1]);
       })
     );
+    this.radar = new PIXI.Graphics();
+    this.radar.beginFill(0x123455, 0.25);
+    this.radar.drawCircle(0, 0, 100);
+
     // this.graphics.filters = [new MotionBlurFilter([1, 2], 30)];
     // Stage
-    this.game.viewport.addChild(this.graphics);
+    this.game.units.addChild(this.graphics);
+    this.game.radar.addChild(this.radar);
   }
   combine(forces: Vector2D[], reducer: number = 1) {
     const combinedForce = new Vector2D();
@@ -222,7 +228,7 @@ class Soldier {
     return sum;
   }
 
-  seek(weight: number = 1, approach: boolean = false) {
+  seek(weight: number = 1) {
     // Find desired vector
     const desired = new Vector2D();
     desired.subtract(this.body.GetPosition());
@@ -291,7 +297,7 @@ class Soldier {
     temp.SelfAdd(pos);
     temp.SelfMul(this.game.physics.scale);
     this.graphics.position = temp;
-
+    this.radar.position = temp;
     this.graphics.rotation = this.body.GetAngle();
   }
 }
