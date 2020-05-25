@@ -4,7 +4,6 @@ import Stats from '../lib/stats';
 import Physics from './Physics';
 import Target from './Target';
 import World from './World';
-import Box from './Box';
 import Rectangle from './Rectangle';
 import Ground from './Ground';
 import Colors from '../utils/Colors';
@@ -25,9 +24,7 @@ class Game {
   world: any;
   scale: number;
   gravity: any;
-  box: Box;
   ground: Ground;
-  boxes: Box[];
   physics: Physics;
   config: any;
   rectangle: Rectangle;
@@ -40,6 +37,7 @@ class Game {
   keys: any;
   radar: PIXI.Container;
   units: PIXI.Container;
+  panel: PIXI.Application;
 
   constructor(Box2D) {
     this.config = config;
@@ -52,6 +50,17 @@ class Game {
       // transparent: true,
       resizeTo: window,
     });
+    this.panel = new PIXI.Application({
+      width: 200,
+      height: 500,
+      antialias: true,
+      // transparent: true,
+      backgroundColor: 0x123456,
+      // resizeTo: window,
+    });
+    // Adding PIXI application to DOM and setting id to game
+    document.body.appendChild(this.app.view).setAttribute('id', 'game');
+    document.body.appendChild(this.panel.view).setAttribute('id', 'panel');
 
     // Base background
     this.background = new PIXI.Graphics();
@@ -104,18 +113,6 @@ class Game {
         maxWidth: 4000,
         maxHeight: 4000,
       });
-    // @ts-ignore
-
-    // console.log(this.viewport.drag({ keyToPress: ['keyA', 'a', 's', 'd'] }));
-    // .resize(
-    //   window.innerWidth,
-    //   window.innerHeight,
-    //   this.viewport.worldWidth,
-    //   this.viewport.worldHeight
-    // );
-    this.radar = new PIXI.Container();
-
-    this.units = new PIXI.Container();
 
     this.mouse = new Mouse(this);
     this.keys = new Keys(this);
@@ -123,22 +120,8 @@ class Game {
     this.physics = new Physics(Box2D);
 
     this.world = new World(this);
-
-    this.viewport.addChild(this.radar);
-    this.viewport.addChild(this.units);
-
-    // this.elements = [];
-
-    // for (let i = 0; i < this.config.elements.total; i++) {
-    //   this.elements.push(new Rectangle(this));
-    // }
-
-    console.log(this.app);
-    console.log(this.app.view);
   }
   start() {
-    // Add Canvas to DOM
-    document.body.appendChild(this.app.view);
     // FPS
     const FPS = 60;
     // Add boxes

@@ -1,10 +1,12 @@
-import Game from '../Game';
+import Game from '../../../Game';
 import * as PIXI from 'pixi.js';
-import { MotionBlurFilter } from '@pixi/filter-motion-blur';
-import { vectorPixelsToWorld } from '../../utils/Box2DHelpers';
-import Vector2D from '../../utils/Vector2D';
-import Colors from '../../utils/Colors';
-import World from '../World';
+import { vectorPixelsToWorld } from '../../../../utils/Box2DHelpers';
+import Vector2D from '../../../../utils/Vector2D';
+import Colors from '../../../../utils/Colors';
+import World from '../../../World';
+import Range from '../../Range';
+
+import { max } from './soldier.constants';
 
 class Soldier {
   game: Game;
@@ -29,7 +31,7 @@ class Soldier {
 
   vertices: [number, number][];
   scale: any;
-  radar: PIXI.Graphics;
+  range: Range;
   constructor(public world: World, public id: number) {
     this.game = world.game;
     this.physics = this.game.physics;
@@ -41,25 +43,7 @@ class Soldier {
       y: 500,
     };
 
-    this.max = {
-      angular: {
-        force: 25,
-        speed: 5,
-      },
-      linear: {
-        force: 75,
-        speed: 20,
-      },
-      separate: {
-        radius: 2,
-      },
-      alignment: {
-        radius: 10,
-      },
-      approach: {
-        radius: 20,
-      },
-    };
+    this.max = max;
 
     // Define body
     this.bd = new this.Box2D.b2BodyDef();
@@ -119,14 +103,11 @@ class Soldier {
         return new PIXI.Point(vertice[0], vertice[1]);
       })
     );
-    this.radar = new PIXI.Graphics();
-    this.radar.beginFill(0x123455, 0.25);
-    this.radar.drawCircle(0, 0, 100);
 
-    // this.graphics.filters = [new MotionBlurFilter([1, 2], 30)];
+    this.range = new Range(this);
+
     // Stage
-    this.game.units.addChild(this.graphics);
-    this.game.radar.addChild(this.radar);
+    this.world.units.addChild(this.graphics);
   }
   combine(forces: Vector2D[], reducer: number = 1) {
     const combinedForce = new Vector2D();
@@ -297,7 +278,7 @@ class Soldier {
     temp.SelfAdd(pos);
     temp.SelfMul(this.game.physics.scale);
     this.graphics.position = temp;
-    this.radar.position = temp;
+    this.range.graphics.position = temp;
     this.graphics.rotation = this.body.GetAngle();
   }
 }

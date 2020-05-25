@@ -24,10 +24,10 @@ class Keys {
   update(time: number) {
     // console.log(this.right);
     const step = this.right ? time : 0;
-    this.game.viewport.moveCenter(
-      this.game.viewport.center.x + step,
-      this.game.viewport.center.y + 0
-    );
+    // this.game.viewport.moveCenter(
+    //   this.game.viewport.center.x + step,
+    //   this.game.viewport.center.y + 0
+    // );
   }
 }
 export default Keys;

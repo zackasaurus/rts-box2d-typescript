@@ -1,13 +1,16 @@
+import * as PIXI from 'pixi.js';
 import Grid from './Grid';
 import Boundary from './Boundary';
 import Game from './Game';
-import Soldier from './attack/Soldier';
+import Soldier from './units/attack/soldier';
 class World {
   dimensions: { x: number; y: number; w: number; h: number };
   grid: Grid;
   boundary: Boundary;
   soldiers: Soldier[];
   soldier: Soldier;
+  units: PIXI.Container;
+  range: PIXI.Container;
   constructor(public game: Game) {
     this.dimensions = {
       x: 0,
@@ -18,6 +21,12 @@ class World {
 
     this.grid = new Grid(this);
     this.boundary = new Boundary(this);
+
+    this.range = new PIXI.Container();
+    this.units = new PIXI.Container();
+
+    this.game.viewport.addChild(this.range);
+    this.game.viewport.addChild(this.units);
 
     this.soldiers = [];
     for (let i = 0; i < 20; i++) {
