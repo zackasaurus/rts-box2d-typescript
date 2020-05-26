@@ -49,8 +49,6 @@ class Preview {
         this.scale / 2;
     }
 
-    // this.position.y = Math.round(y / this.scale) * this.scale;
-
     this.gfx.position.set(this.position.x, this.position.y);
   }
 }

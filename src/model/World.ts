@@ -5,7 +5,7 @@ import Game from './Game';
 import Soldier from './units/attack/soldier';
 import Preview from './preview';
 import Wall from './units/defense/wall';
-import WallConstants from './units/defense/wall/wall.constants';
+import Missle from './missle';
 class World {
   dimensions: { x: number; y: number; w: number; h: number };
   grid: Grid;
@@ -17,6 +17,7 @@ class World {
   preview: Preview;
   elements: {};
   id: number;
+  missle: Missle;
   constructor(public game: Game) {
     this.dimensions = {
       x: 0,
@@ -41,6 +42,7 @@ class World {
     this.elements = {};
     this.preview = new Preview('wall', this);
     // this.soldier =
+    this.missle = new Missle({ x: 500, y: 500 }, { x: 20, y: 40 }, this);
   }
   create(unit: 'string') {
     const id = this.id;

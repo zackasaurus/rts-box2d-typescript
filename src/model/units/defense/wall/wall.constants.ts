@@ -1,4 +1,4 @@
 const WallConstants = {
-  dimensions: { width: 7, height: 5 },
+  dimensions: { width: 1, height: 1 },
 };
 export default WallConstants;
